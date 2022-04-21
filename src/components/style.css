@@ -1,0 +1,26 @@
+.line{
+    height: 5px;
+    width: 76px;
+    background: rgb(22, 162, 240);
+    margin-left: 50px;
+    border-radius: 5px;
+}
+.header{
+    font-weight: 600;
+    font-size: 25px;
+    margin-left: 50px;
+    color: rgba(126, 126, 126, 1);
+}
+.cards{  
+    width: 400px;
+    height: 200px;
+    margin-left: 50px;
+    background: white;
+    margin-top: -5px;
+}
+.cardheader{
+    font-weight: 600;
+    font-size: 20px;
+    margin-left: 22px;
+    color: rgba(126, 126, 126, 1);
+}
