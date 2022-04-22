@@ -1,0 +1,28 @@
+.headers{
+    margin-right: 140px;
+    color:#00629B;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.subdiv{
+    width: 850px;
+    height: 380px;
+    background: white;
+    margin-left: 65px;
+    margin-top: 30px;
+    border-radius: 10px;
+    padding: 25px;
+    display: flex;
+}
+
+.content{
+    width: 455px;
+    margin-left: -21px;
+    height: 63px;
+    margin-top: 20px;
+    background: rgba(96, 193, 228, 0.25);
+    border-radius: 8px;
+    text-align: center;
+    margin-top: 20px;
+}
