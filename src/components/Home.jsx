@@ -3,6 +3,7 @@ import Chart from 'react-apexcharts'
 import ApexCharts from 'react-apexcharts';
 
 
+
 import style from './style.css'
 
 export default class Home extends Component {
@@ -57,7 +58,7 @@ export default class Home extends Component {
     const { series, categorie,series1 } = this.state;
     return (
         <>
-        <div style={{width:'960px',background:'rgba(21, 137, 236, 0.13)',marginLeft:'210px'}}>
+        <div style={{width:'1000px',background:'rgba(21, 137, 236, 0.13)'}}>
             <span className='header'>Food Wastage</span>
             <div className='line'></div>
       <div style={{marginTop:'30px',display:'flex'}}>

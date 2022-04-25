@@ -1,22 +1,52 @@
 import React, { Component } from 'react'
 import styling from './styling.css'
+import Livedata from './Livedata';
+// import Dailywastage from './Dailywastage';
+import Weeklywastage from './Weeklywastage';
+import MonthlyWastage from './Monthlywastage'
+import $ from 'jquery'
+import FoodHome from './FoodHome';
+import Dailywastage from './Dailywastage';
 import "react-responsive-carousel/lib/styles/carousel.min.css";
-import Chart from 'react-apexcharts'
 import { Carousel } from 'react-responsive-carousel';
+export function  sidelinkClicked (id) {
+  $('.headers').removeAttr("style");
+  $("#" + id).css({
+    "color": "#00629B",
+    "background": "linear-gradient(to right,  #d7e1f4 , #ebf0fa)",
+    "border-left": "3px solid #00629B",
+    "font-weight": "bold",
+});
 
+
+}
 export default class Homepage extends Component {
+  // List = [false, false,false,false];
   constructor(props) {
     super(props);
     this.state = {
         series: [],  
         };
 }
-
 componentDidMount(){
-  this.setState({series:[
-    15,(200-15)
-  ]})
+  // sidelinkClicked('option0')
+  
+  // this.List[0] = true;
+  // $("#opt0").css({"background": "#00629bed", "color": "white" });
 }
+
+// optionChange = (e) => {
+//   $("#opt0").css({ "background": "none", "color": "#000" });
+//   $("#opt1").css({"background": "none", "color":"#000"});
+//   $("#opt2").css({"background": "none", "color":"#000"});
+//   $("#opt3").css({"background": "none", "color":"#000"});
+//   this.setState({ flag: true })
+//   this.List = [false, false,false]
+//   let id = parseInt(e.target.id.substring(3))
+//   $("#" + e.target.id).css({ "background": "#00629bed", "color": "white" });
+//   this.List[id] = true;
+// }
+
   render() {
     const { series } = this.state;
     return (
@@ -28,78 +58,42 @@ componentDidMount(){
           <img src="/images/astralogo.png" alt="" style={{width:'160px',float:'right',marginTop:'-19px'}}/>
           </div>
 
-          <div style={{display:'flex',marginLeft:'120px',marginTop:'20px'}}>
-            <span className='headers'>Live Data</span>
-            <span className='headers'>Daily Data</span>
-            <span className='headers'>Weekly Data</span>
-            <span className='headers'>Monthly Data</span>
+          <div  onClick={this.optionChange} style={{display:'flex',marginLeft:'120px',marginTop:'20px'}}>
+            <span  id="option0" className='headers'  onClick={() => sidelinkClicked("option0")}>Live Data</span>
+            <span  id="option1" className='headers' onClick={() => sidelinkClicked("option1")}>Daily Data</span>
+            <span  id="option2" className='headers'  onClick={() => sidelinkClicked("option2")}>Weekly Data</span>
+            <span  id="option3" className='headers'  onClick={() => sidelinkClicked("option3")}>Monthly Data</span>
           </div>
 
+
+          <Carousel interval={10000} infiniteLoop useKeyboardArrows   autoPlay width ='1300px'>
+          
+            {/* <div className='subdiv'>
+            {this.List[0] && (< Livedata/>)}
+            {this.List[1] && (< Dailywastage/>)}
+            {this.List[2] && (< Weeklywastage/>)}
+            {this.List[3] && (< MonthlyWastage/>)}   
+               </div>  */}
 
           <div className='subdiv'>
-          {/* <Carousel infiniteLoop  autoPlay> */}
-                <div style={{marginTop:'30px'}}>
-                {series.length !== 0 ?
-              <Chart series={series}
+                 < Livedata/>
+            </div> 
+            <div className='subdiv'>
+            < Dailywastage/>
+            </div>
+            <div className='subdiv' >
+                 < Weeklywastage/>
+            </div> 
+            <div className='subdiv'>
+            < MonthlyWastage/>
+            </div>
+           
+          
               
-                                    options={{
-                                        labels: [
-                                            'Occupied','Available'
-                                        ],
-                                        legend: {  
-                                            show:true,
-                                            position:'bottom',
-                                            offsetX:30
-                                        },
-                                        dataLabels: {
-                                            enabled: false
-                                        },
-                                        colors: [
-                                            '#3EDADA', '#C3F4F4'
-                                        ],
-                                        plotOptions: {
-                                            pie: {
-                                                donut: {
-                                                    labels: {
-                                                      show:true,
-                                                      name: {
-                                                        show: false,
-                                                        // offsetY: -6,
-                                                      },
-                                                        total: {
-                                                            show: true,
-                                                            label: '',
-                                                            formatter: () => '15',
-                                                        },
-
-                                                    }
-                                                }
-                                            }
-                                        },
-                                    }}
-                                    
-                                    type="donut"
-                                    width="420"/>:<p></p>}
-                </div>
-                <div style={{width:'425px'}}>
-                      
-                      <h4 style={{marginTop:'0px',marginLeft:'218px',color:'#6B6B6B'}}> Mac ID : 5a-c2-15-00-00-00</h4>
-                      <h1 style={{marginTop:'95px',marginLeft:'89px',fontSize:'80px',color:'#60C1E4',marginBottom:'78px'}}>110</h1>
-
-                      <div className='content'>
-                              <span style={{textAlign:'center',color:'#013E61',fontWeight:500}}>Food Fact</span><br />
-                              <span style={{color:'#013E61'}}>There is enough food produced in the world to feed everyone.</span>
-                      </div>
-                </div>
-                {/* <div>
-                    image2
-                </div>
-                <div>
-                    image3
-                </div> */}
-            {/* </Carousel> */}
-          </div>
-        </div>
+              
+            </Carousel>
+   
+            </div>
       </>
     )
   }

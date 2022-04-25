@@ -9,7 +9,7 @@ export default class Carouseltrial extends Component {
     return (
       <div>
               <div class="carousel-wrapper">
-            <Carousel infiniteLoop useKeyboardArrows autoPlay>
+            <Carousel infiniteLoop useKeyboardArrows autoPlay width ='1300px'>
                 <div>
                    <Home/>
                 </div>
