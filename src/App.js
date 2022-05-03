@@ -1,17 +1,19 @@
 import React,{Component} from "react";
-import Home from "./components/Home";
-import Dailywastage from './components/Dailywastage';
-import Carouseltrial from "./components/Carouseltrial";
-import Slide from "./components/Slide";
+import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import Homepage from "./components/Homepage";
+import Livedata from "./components/Livedata";
 
 function App() {
   return (
     <div>
-      {/* <Home/> */}
-      {/* <Carouseltrial/> */}
-      {/* <Slide/> */}
+     {/* <Router>   */}
       <Homepage/>
+      {/* <Routes>
+           
+            <Route exact path="/livedata" element={<Livedata/>}  />
+          
+        </Routes>
+      </Router> */}
     </div>
   );
 }
