@@ -9,11 +9,12 @@ export default class Livedata extends Component {
         super(props);
         this.state = {
             series: [],  
+            series1:[]
             };
     }
       componentDidMount(){
        console.log('livedata======');
-        // this.interval = setInterval(() => {
+        this.interval = setInterval(() => {
         axios({method:'POST',url:'/api/sensor/report',data:{"key":"live"}})
         .then((response)=>{
           // console.log('=====livedata',response.data);
@@ -44,11 +45,11 @@ export default class Livedata extends Component {
           console.log(this.battery);
           $('#battery').text('Battery: '+this.battery)
      
-          this.current_waste=data.current_wastage;
+          this.current_waste=data.current_wastage.toFixed(2);
           // console.log(this.current_waste);
 
           this.total_waste=data.totalweight;
-          // console.log(this.total_waste);
+          console.log(this.total_waste);
 
           this.waste=data.totalweight.toFixed(2);
           if(this.waste<1){
@@ -58,23 +59,33 @@ export default class Livedata extends Component {
           }
 
           this.lastseen=data.timestamp.substr(0,10)+ " " +data.timestamp.substr(11,8)
-          // console.log(this.lastseen);
+          console.log(this.total_waste,'************');
           $('#lastseen').text('Last Seen : '+this.lastseen)
 
           this.setState({series:[
             this.total_waste,(200-this.total_waste)
              ]})
 
+             this.setState({series1:[
+             0,0
+               ]})
+
         })
         .catch((error)=>{
           console.log(error);
+          if(error.status===400){
+            this.setState({error:true,message:'No Data Found '})
+          }
         })
 
-      // },1000)
+      },1000)
       
       } 
+      componentWillUnmount() {
+        clearInterval(this.interval);
+      }
   render() {
-    const{series}=this.state;
+    const{series,series1}=this.state;
  
     return (
     <>
@@ -84,7 +95,7 @@ export default class Livedata extends Component {
       <div style={{display:'flex'}}>
         
             <div style={{marginTop:'25px'}}>
-              {series.length>0?
+              {series.length >0 ?
                 
               <Chart series={series}
               
@@ -101,7 +112,7 @@ export default class Livedata extends Component {
                                             enabled: false
                                         },
                                         colors: [
-                                            '#3EDADA', '#C3F4F4'
+                                            '#ff8080', '#C3F4F4'
                                         ],
                                         plotOptions: {
                                             pie: {
@@ -117,6 +128,9 @@ export default class Livedata extends Component {
                                                             label: '',
                                                             formatter: () => this.waste
                                                         },
+                                                        tooltip: {
+                                                          enabled: false,
+                                                        }
 
                                                     }
                                                 }
@@ -126,16 +140,64 @@ export default class Livedata extends Component {
                                     
                                     type="donut"
                                     width="400"/>
-                                     :<p></p>} 
-                                     <span >Wastage</span>
+
+                                     : 
+                                     <Chart series={series1}
+              
+                                     options={{
+                                         labels: [
+                                             'wastage','Available'
+                                         ],
+                                         legend: {  
+                                             show:false,
+                                             position:'bottom',
+                                             offsetX:20
+                                         },
+                                         dataLabels: {
+                                             enabled: false
+                                         },
+                                         colors: [
+                                             '#ff8080', '#C3F4F4'
+                                         ],
+                                         plotOptions: {
+                                             pie: {
+                                                 donut: {
+                                                     labels: {
+                                                       show:true,
+                                                       name: {
+                                                         show: true,
+                                                         offsetY: -6,
+                                                       },
+                                                         total: {
+                                                             show: true,
+                                                             label: '',
+                                                             formatter: () => '0/0'
+                                                         },
+ 
+                                                     }
+                                                 }
+                                             }
+                                         },
+                                     }}
+                                     
+                                     type="donut"
+                                     width="400"/>
+                                    
+                                   } 
+                                     <div style={{display:'flex',marginLeft:"170px"}}>
+                                     <div style={{width:'10px',height:'10px',borderRadius:'50%',background:'#ff8080'}}></div>
+                                     <p style={{marginTop:'-7px',marginLeft:'3px'}} >Wastage</p>
+                                     </div>
+                                 
                                    
                 </div>
                 <div style={{width:'425px'}}>
                       
                       <h4 id='lastseen'style={{marginTop:'0px',marginLeft:'100px',color:'#6B6B6B',marginBottom:'3px'}}> Last Seen :</h4>
-                      <h4 id='battery'style={{marginTop:'0px',marginLeft:'91px',color:'#6B6B6B'}}> </h4>
+                      <h4 id='battery'style={{marginTop:'0px',marginLeft:'-55px',color:'#6B6B6B'}}> </h4>
 
-                      <h1 style={{marginTop:'56px',marginLeft:'-15px',fontSize:'70px',color:'#60C1E4',marginBottom:'58px'}}>
+                       <b> <p style={{fontSize:'20px',color:' #ff8080',marginBottom:'0px',marginTop:"53px"}}>Current Wastage</p></b>
+                      <h1 style={{marginTop:'0px',marginLeft:'-15px',fontSize:'70px',color:'#ff8080',marginBottom:'58px'}}>
                         {this.current_waste}
                      </h1>
                       

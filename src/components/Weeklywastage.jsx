@@ -15,7 +15,7 @@ export default class Weeklywastage extends Component {
   }
   componentDidMount() {
 
-    // this.interval = setTimeout(() => {
+    this.interval = setTimeout(() => {
     //   let val = [100, 200, 300, 230, 450, 302,500,620,50,58,65,250], cat = [1,2,3,4,5,6,7,8,9,10,11,12];
     //   this.setState({ series: val, categorie: cat });
     // }, 550);
@@ -39,6 +39,7 @@ export default class Weeklywastage extends Component {
         this.setState({series:this.wastage , categorie:this.time})
        
       })
+    },2000)
   }
 
   componentWillUnmount() {

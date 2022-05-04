@@ -10,6 +10,8 @@ export default class Dailywastage extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      error:'',
+      message:'',
       series: [],
       options: {
         chart: {
@@ -61,7 +63,7 @@ export default class Dailywastage extends Component {
   }
   componentDidMount() {
    
-    // this.interval = setTimeout(() => {
+    this.interval = setInterval(() => {
       // let val = [100, 200, 300, 230, 450, 302,100, 200, 300], cat = [1,2,3,4,5,6,7,8,9];
       // this.setState({ series: val, categorie: cat });
       axios({method:'POST',url:'/api/sensor/report',data:{"key":"daily"}})
@@ -99,16 +101,19 @@ export default class Dailywastage extends Component {
       })
       .catch((error)=>{
         console.log(error);
+        if(error.status===400){
+          this.setState({error:true,message:'No Data Found '})
+        }
       })
       
-    // }, 2000);
+    }, 2000);
   }
 
   componentWillUnmount() {
     clearInterval(this.interval);
   }
   render() {
-    const { series } = this.state;
+    const { series,message } = this.state;
 
     return (
       <>
@@ -116,6 +121,7 @@ export default class Dailywastage extends Component {
           <span style={{fontSize:'30px',fontWeight:500,color:'#00629B'}}>Daily Data</span><br />
           <b><span id='wastage'style={{marginTop:'0px',marginLeft:'620px',color:'#6B6B6B'}}> </span></b> 
         </div>
+        <p>{message}</p>
       
         <div style={{ marginTop: "10px" }}>
         {

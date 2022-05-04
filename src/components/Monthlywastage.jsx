@@ -17,10 +17,7 @@ export default class Monthlywastage extends Component {
   }
   componentDidMount() {
 
-    // this.interval = setInterval(() => {
-      // let val = [100, 200, 300, 230, 450, 302,100, 200, 300, 230, 450, 302,150,114,850];
-      // let cat = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15]
-      // this.setState({ series: val, categorie: cat });
+    this.interval = setInterval(() => {
       axios({method:'POST',url:'/api/sensor/report',data:{"key":"monthly"}})
       .then((response)=>{
       
@@ -29,14 +26,8 @@ export default class Monthlywastage extends Component {
         this.wastage=[]
         this.time=[]
         this.monthlywaste=response.data.weight.toFixed(2)
-        // console.log('mowastage',monthlywaste);
-        // $('#totalwastage').text('Wastage :')
-        // $('#totalwastage').text('Total Wastage : ' + monthlywaste +'kg')
-        // console.log(monthlywaste,'month');
-        // $('#monthlywaste').text('Total Wastage : ' + monthlywaste +'kg')
         for(let i=0;i<data.length; i++){
           this.weight=data[i].wastage.toFixed(2);
-          // console.log('|||||', this.weight)
           this.wastage.push(this.weight)
           this.lastseen=data[i].time
         this.time.push(this.lastseen)
@@ -44,7 +35,7 @@ export default class Monthlywastage extends Component {
         this.setState({series:this.wastage , categorie:this.time})  
       })
   
-    // }, 2000);
+    }, 2000);
   }
 
   componentWillUnmount() {
@@ -58,7 +49,6 @@ export default class Monthlywastage extends Component {
       <div style={{marginBottom:'30px'}}>
       
           <span style={{fontSize:'30px',fontWeight:500,color:'#00629B'}}>Monthly Data</span> <br />
-          {/* <b><span id='monthlywaste'style={{marginTop:'0px',marginLeft:'620px',color:'#6B6B6B'}}> </span></b>  */}
         <b><span id='totalwastage' style={{marginTop:'0px',marginLeft:'620px',color:'#6B6B6B'}}>Total Wastage :{ this.monthlywaste}kg</span></b> 
         
         </div>

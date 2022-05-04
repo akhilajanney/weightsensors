@@ -75,7 +75,8 @@ export default class Homepage extends Component {
                             }/>
                     </div>
 
-                    <Carousel interval={5000}
+                    <Carousel 
+                    interval={5000}
                         infiniteLoop
                         useKeyboardArrows
                         autoPlay
