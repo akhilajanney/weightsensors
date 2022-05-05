@@ -10,6 +10,8 @@ export default class Monthlywastage extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      error:false,
+      message:'',
       series: [],
       categorie: [],
     };
@@ -22,7 +24,7 @@ export default class Monthlywastage extends Component {
       .then((response)=>{
       
         let data=response.data.data
-        console.log('=====monthlydata',response.data);
+        // console.log('=====monthlydata',response.data);
         this.wastage=[]
         this.time=[]
         this.monthlywaste=response.data.weight.toFixed(2)
@@ -34,6 +36,12 @@ export default class Monthlywastage extends Component {
         }
         this.setState({series:this.wastage , categorie:this.time})  
       })
+      .catch((error)=>{
+        console.log(error);
+        if(error.status===400){
+          this.setState({error:true,message:'No Data Found '})
+        }
+      })
   
     }, 2000);
   }
@@ -42,7 +50,7 @@ export default class Monthlywastage extends Component {
     clearInterval(this.interval);
   }
   render() {
-    const { series, categorie } = this.state;
+    const { series, categorie,message} = this.state;
    
     return (
       <>
@@ -52,6 +60,7 @@ export default class Monthlywastage extends Component {
         <b><span id='totalwastage' style={{marginTop:'0px',marginLeft:'620px',color:'#6B6B6B'}}>Total Wastage :{ this.monthlywaste}kg</span></b> 
         
         </div>
+        <p>{message}</p>
         <div style={{ marginTop: "10px" }}>
           {
             categorie.length !== 0 ?

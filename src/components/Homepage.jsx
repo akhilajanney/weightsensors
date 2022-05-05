@@ -14,33 +14,36 @@ export default class Homepage extends Component {
         super(props);
         this.state = {
             series: [],
-            currval: [],
-            count: 0,
-            pathLink: "1"
+           
         };
     }
-    componentDidMount() {
-        // console.log('didmount');
-
-        // axios({
-        //     method: 'POST',
-        //     url: '/api/sensor/report',
-        //     data: {
-        //         "key": "daily"
-        //     }
-        // }).then((response) => {
-        //     this.interval = setInterval(() => {
-        //         let data = response.data.data;
-        //         const item = data[data.length - 1];
-        //         this.lastseen = item.timestamp.substr(0, 10) + " " + item.timestamp.substr(11, 8)
-
-        //         this.weight = item.weight;
-        //         this.setState({currval: this.weight})
-        //         this.funt()
-        //     }, 5000)
-        // })
-
-    }
+    componentDidMount(){
+        console.log('livedata======');
+         this.interval = setInterval(() => {
+         axios({method:'POST',url:'/api/sensor/report',data:{"key":"live"}})
+         .then((response)=>{
+ 
+           let data=response.data;
+ 
+           this.total_waste=data.reading;
+           console.log(this.total_waste);
+ 
+     if(this.total_waste>180.00){
+         $('#maindiv').css('background','#ff8080')
+         $('#subdiv').css('background','#ff8080')
+     }
+ 
+ 
+         })
+         .catch((error)=>{
+           console.log(error);
+         })
+       },1000)
+       
+       } 
+       componentWillUnmount() {
+         clearInterval(this.interval);
+       }
 
 
     render() {
@@ -49,7 +52,7 @@ export default class Homepage extends Component {
         return (
 
             <>
-                <div style={
+                <div id='maindiv'style={
                     {
                         width: '1024px',
                         height: '600px',
@@ -76,10 +79,10 @@ export default class Homepage extends Component {
                     </div>
 
                     <Carousel 
-                    interval={5000}
+                    // interval={5000}
                         infiniteLoop
                         useKeyboardArrows
-                        autoPlay
+                        // autoPlay
                         showIndicators={false}
                         showStatus={false}
                         showThumbs={false}
@@ -91,10 +94,10 @@ export default class Homepage extends Component {
                             <Dailywastage/>
                         </div>
                         <div className='subdiv'>
-                            <Weeklywastage/>
+                            {/* <Weeklywastage/> */}
                         </div>
                         <div className='subdiv'>
-                            <MonthlyWastage/>
+                            {/* <MonthlyWastage/> */}
                         </div>
 
                     </Carousel>

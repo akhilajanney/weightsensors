@@ -8,6 +8,8 @@ export default class Weeklywastage extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      error:false,
+      message:'',
       series: [],
       categorie: [],
     };
@@ -25,7 +27,7 @@ export default class Weeklywastage extends Component {
       
         let data=response.data.data
         // console.log('=====weeklydata');
-        console.log('=====weeklydata',response.data);
+        // console.log('=====weeklydata',response.data);
         let waste=response.data.weight.toFixed(2)
         $('#waste').text('Total Wastage : ' + waste +'kg')
         this.wastage=[]
@@ -39,6 +41,12 @@ export default class Weeklywastage extends Component {
         this.setState({series:this.wastage , categorie:this.time})
        
       })
+      .catch((error)=>{
+        console.log(error);
+        if(error.status===400){
+          this.setState({error:true,message:'No Data Found '})
+        }
+      })
     },2000)
   }
 
@@ -47,13 +55,14 @@ export default class Weeklywastage extends Component {
     clearInterval(this.interval);
   }
   render() {
-    const { series, categorie } = this.state;
+    const { series, categorie,message } = this.state;
     return (
       <>
       <div style={{marginBottom:'30px'}}>
           <span style={{fontSize:'30px',fontWeight:500,color:'#00629B'}}>Weekly Data</span><br />
           <b><span id='waste'style={{marginTop:'0px',marginLeft:'610px',color:'#6B6B6B'}}> </span></b> 
         </div>
+        <p>{message}</p>
         <div style={{ marginTop: "10px" }}>
           {
             categorie.length !== 0 ?

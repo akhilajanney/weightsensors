@@ -10,7 +10,7 @@ export default class Dailywastage extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      error:'',
+      error:true,
       message:'',
       series: [],
       options: {
@@ -39,7 +39,7 @@ export default class Dailywastage extends Component {
         yaxis: {
           labels: {
             formatter: function (value) {
-              return value.toFixed(2) + "g";
+              return value.toFixed(2) + "kg";
             }
           },
         },
@@ -69,21 +69,30 @@ export default class Dailywastage extends Component {
       axios({method:'POST',url:'/api/sensor/report',data:{"key":"daily"}})
       .then((response)=>{
         console.log('=====dailydata',response.data);
-        let wastage=response.data.sum.toFixed(2)
+        let wastage=response.data.wastage.toFixed(2)
        
-        console.log(wastage,'daily');
+        // console.log(wastage,'daily');
         $('#wastage').text('Total Wastage : ' + wastage +'kg')
         let datas=response.data.data
-        console.log('++++++',datas);
+        // console.log('++++++',datas);
         if (datas.length !== 0) {
           let value1 = []; 
           for (let i = 0; i < datas.length; i++) {
                   let tempData = [];
                   this.time = datas[i].timestamp.substring(0, 19).replace("T", " ");
-                  var date = new Date(this.time);
-                  var milliseconds = date.getTime();
-                  tempData.push(milliseconds);
-                  tempData.push(datas[i].scaledweight)
+                  // var date = new Date(this.time);
+                  // var milliseconds = date.getTime();
+
+                  console.log(this.time,'==========s');
+                  // tempData.push(milliseconds);
+                  tempData.push(this.time);
+                  if(datas[i].dcstatus ===0){
+                    tempData.push(datas[i].reading)
+                  }else{
+                      console.log('11111');
+                      tempData.push(0)
+                  }
+                  
                    value1.push(tempData);     
               
           }
@@ -92,7 +101,7 @@ export default class Dailywastage extends Component {
           this.setState({
               series: [
                   {
-                      name: 'Temp',
+                      name: 'Wastages',
                       data: value1,
                   },
               ]

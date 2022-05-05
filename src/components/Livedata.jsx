@@ -8,6 +8,8 @@ export default class Livedata extends Component {
     constructor(props) {
         super(props);
         this.state = {
+          error:false,
+          message:'',
             series: [],  
             series1:[]
             };
@@ -17,58 +19,45 @@ export default class Livedata extends Component {
         this.interval = setInterval(() => {
         axios({method:'POST',url:'/api/sensor/report',data:{"key":"live"}})
         .then((response)=>{
-          // console.log('=====livedata',response.data);
-          // let data=response.data.data;
-         
-          // this.value=response.data.sum;
-          // this.wastage=(this.value).toFixed(2)
-          // const item = data[data.length - 1];
-          // this.lastseen=item.timestamp.substr(0,10)+ " " +item.timestamp.substr(11,8)
-
-          // if(item.weightdifference<=1){
-          //     this.currentval = item.weightdifference*1000 +'g'
-          //     console.log('g')
-          // }
-          // else{
-          //   this.currentval = item.weightdifference.toString()+'kg'
-          //   console.log('kg',this.currentval)
-          // }
-          // this.weight=item.scaledweight;
-          // $('#lastseen').text('Last Seen : '+this.lastseen)
-
-          // this.setState({series:[
-          //   this.weight,(200-this.weight)
-          // ]})
 
           let data=response.data;
+          console.log(response.data,'=======');
           this.battery=data.battery;
-          console.log(this.battery);
+         console.log(this.battery,'------');
           $('#battery').text('Battery: '+this.battery)
-     
-          this.current_waste=data.current_wastage.toFixed(2);
-          // console.log(this.current_waste);
-
-          this.total_waste=data.totalweight;
-          console.log(this.total_waste);
-
-          this.waste=data.totalweight.toFixed(2);
-          if(this.waste<1){
-            this.waste=data.totalweight*1000 +'g'
+          // let a=data.current_wastage;
+          // console.log(a,'---------------');
+          
+          this.current_waste=data.current_wastage.toFixed(3);
+           console.log( this.current_waste,'---------------');
+           if(this.current_waste<1){
+            this.current_waste=this.current_waste*1000+'g'
           }else{
-            this.waste=data.totalweight +'kg'
+            this.current_waste=this.current_waste+'kg'
           }
 
+          $('#currentwaste').text(this.current_waste)
+
+          this.total_waste=data.reading;
+
+          this.waste=data.reading.toFixed(3);
+          console.log(this.waste,'formatter')
+          if(this.waste<1){
+            this.waste= this.waste*1000 +'g'
+          }else{
+            this.waste= this.waste +'kg'
+          }
+          
           this.lastseen=data.timestamp.substr(0,10)+ " " +data.timestamp.substr(11,8)
-          console.log(this.total_waste,'************');
+          // this.lastseen=data.timestamp
+          console.log(this.lastseen,'************');
           $('#lastseen').text('Last Seen : '+this.lastseen)
 
           this.setState({series:[
             this.total_waste,(200-this.total_waste)
              ]})
 
-             this.setState({series1:[
-             0,0
-               ]})
+             this.setState({series1:[0,200]})
 
         })
         .catch((error)=>{
@@ -85,23 +74,22 @@ export default class Livedata extends Component {
         clearInterval(this.interval);
       }
   render() {
-    const{series,series1}=this.state;
+    const{series,series1,message}=this.state;
  
     return (
     <>
     <div style={{marginBottom:'30px'}}>
           <span style={{fontSize:'30px',fontWeight:500,color:'#00629B'}}>Live Data</span>
         </div>
+
       <div style={{display:'flex'}}>
         
             <div style={{marginTop:'25px'}}>
-              {series.length >0 ?
-                
+              {series.length >0 ? (
               <Chart series={series}
-              
                                     options={{
                                         labels: [
-                                            'wastage','Available'
+                                            'wastage','Max Limit'
                                         ],
                                         legend: {  
                                             show:false,
@@ -126,7 +114,7 @@ export default class Livedata extends Component {
                                                         total: {
                                                             show: true,
                                                             label: '',
-                                                            formatter: () => this.waste
+                                                            formatter: () =>this.waste
                                                         },
                                                         tooltip: {
                                                           enabled: false,
@@ -139,14 +127,14 @@ export default class Livedata extends Component {
                                     }}
                                     
                                     type="donut"
-                                    width="400"/>
-
+                                    width="400"/>)
                                      : 
-                                     <Chart series={series1}
+                                     (
+                                     <Chart series={[0,200]}
               
                                      options={{
                                          labels: [
-                                             'wastage','Available'
+                                             'wastage','Max Limit'
                                          ],
                                          legend: {  
                                              show:false,
@@ -171,7 +159,7 @@ export default class Livedata extends Component {
                                                          total: {
                                                              show: true,
                                                              label: '',
-                                                             formatter: () => '0/0'
+                                                             formatter: () => '0'
                                                          },
  
                                                      }
@@ -182,9 +170,10 @@ export default class Livedata extends Component {
                                      
                                      type="donut"
                                      width="400"/>
+                                     )
                                     
                                    } 
-                                     <div style={{display:'flex',marginLeft:"170px"}}>
+                                     <div style={{display:'flex',marginLeft:"160px"}}>
                                      <div style={{width:'10px',height:'10px',borderRadius:'50%',background:'#ff8080'}}></div>
                                      <p style={{marginTop:'-7px',marginLeft:'3px'}} >Wastage</p>
                                      </div>
@@ -192,18 +181,29 @@ export default class Livedata extends Component {
                                    
                 </div>
                 <div style={{width:'425px'}}>
+                  <div style={{display:'flex',marginLeft:'100px'}}>
+                      <i className="fal fa-watch" style={{fontSize:'20px',color:'#6B6B6B',marginTop:'2px',marginRight:'8px'}}></i>
+                      <h4 id='lastseen'style={{marginTop:'0px',color:'#6B6B6B',marginBottom:'3px'}}>
+                      Last Seen :
+                      </h4>
+                      </div>
+                    
+                    <div style={{display:'flex',marginLeft:'100px',color:'#6B6B6B',marginTop:'5px'}}>
+                    <i className="fal fa-battery-half"  style={{marginTop:'4px',marginRight:'8px'}}></i>
+                    <h4 id='battery'style={{marginTop:'0px',color:'#6B6B6B'}}>Battery :</h4>
+                    </div>
                       
-                      <h4 id='lastseen'style={{marginTop:'0px',marginLeft:'100px',color:'#6B6B6B',marginBottom:'3px'}}> Last Seen :</h4>
-                      <h4 id='battery'style={{marginTop:'0px',marginLeft:'-55px',color:'#6B6B6B'}}> </h4>
 
-                       <b> <p style={{fontSize:'20px',color:' #ff8080',marginBottom:'0px',marginTop:"53px"}}>Current Wastage</p></b>
-                      <h1 style={{marginTop:'0px',marginLeft:'-15px',fontSize:'70px',color:'#ff8080',marginBottom:'58px'}}>
-                        {this.current_waste}
+                       <b> <p style={{fontSize:'18px',color:' #ff8080',marginBottom:'0px',marginTop:"53px",marginTop:'18px'}}>Current Wastage</p></b>
+                      <h1 className="zoom-in-zoom-out" id='currentwaste'
+                      style={{marginTop:'0px',marginLeft:'-15px',fontSize:'70px',color:'#ff8080',marginBottom:'58px'}}>
+                        {/* {this.current_waste} */}
+                        0g
                      </h1>
                       
 
                       <div className='content'>
-                              <span style={{textAlign:'center',color:'#013E61',fontWeight:500}}>Food Fact</span><br />
+                              <span style={{textAlign:'center',color:'#013E61',fontWeight:500}}>FACTS</span><br />
                               <Carousel  useKeyboardArrows
                                           autoPlay
                                           interval={6000}
@@ -213,22 +213,32 @@ export default class Livedata extends Component {
                                           showStatus={false}
                                           showThumbs={false}>
                               <div>
-                              <span style={{color:'#013E61',marginTop:'5px'}}>There is enough food produced in the world to feed everyone.</span>
+                              <span style={{color:'#013E61',marginTop:'5px',fontWeight:500}}>Today's WASTAGE Is Tomorrow's SHORTAGE</span>
                               </div>
                               <div>
-                              <span style={{color:'#013E61',marginTop:'3px'}}>
-                              If one quarter of the food currently lost or wasted could be saved, 
-                              it would be enough to feed 870 million hungry people.</span>
+                              <span style={{color:'#013E61',marginTop:'3px',fontWeight:500}}>
+                              A Nation Could Eat Off The Food We Waste.</span>
                               </div>
                               <div>
-                              <span style={{color:'#013E61',marginTop:'3px'}}>
-                              Wasting food is worse than total emissions from flying (1.9%), plastic production (3.8%)
-                               and oil extraction (3.8%).</span>
+                              <span style={{color:'#013E61',marginTop:'3px',fontWeight:500}}>
+                              Get Only The Amount You Need.</span>
                               </div>
                               <div>
-                              <span style={{color:'#013E61',marginTop:'3px'}}>One in nine people do not have enough food to eat,
-                               that’s 793 million people who are undernourished.</span>
+                              <span style={{color:'#013E61',marginTop:'3px',fontWeight:500}}>Respect for food is a respect for life, 
+                              for who we are and what we do
+                              </span>
                               </div>
+                              <div>
+                              <span style={{color:'#013E61',marginTop:'3px',fontWeight:500}}>
+                              You paid good money for that… why throw it away?
+                             </span>
+                              </div>
+                              <div>
+                              <span style={{color:'#013E61',marginTop:'3px',fontWeight:500}}>
+                              Get only the amount you need.
+                             </span>
+                              </div>
+                              
                               </Carousel>
                              
                       </div>
